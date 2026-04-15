@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const authSlice = createSlice({
   name: 'auth',
@@ -11,7 +11,7 @@ const authSlice = createSlice({
     message: '',
   },
   reducers: {},
-  extraReducers: () => {},
+  extraReducers: (builder) => {},
 });
 
 export default authSlice.reducer;
