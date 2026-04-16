@@ -1,7 +1,16 @@
-import { useState } from 'react';
 import styles from './styles.module.css';
+import { useEffect, useState } from 'react';
+import { register } from '../../redux/slices/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { resetState } from '../../redux/slices/authSlice';
 
 function Register() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -10,20 +19,29 @@ function Register() {
 
   const { email, password, confirmPassword } = formData;
 
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/login');
+    }
+
+    return () => {
+      dispatch(resetState());
+    };
+  }, [isSuccess, navigate]);
+
   const handleChange = (event) => {
-    const {name, value} = event.target;
-    setFormData({...formData, [name]: value});
-  }
+    const { name, value } = event.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if(password !== confirmPassword) {
-      alert('Password do not match');
-      return
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
     }
-
-    
-  }
+    dispatch(register({ email, password }));
+  };
 
   return (
     <div className={styles.container}>
@@ -52,7 +70,11 @@ function Register() {
           onChange={handleChange}
           required
         />
-        <button type="submit">Register</button>
+        <button type="submit" disabled={isLoading}>
+          Register
+        </button>
+        {isError && <p className={styles.message}>{message}</p>}
+        {isSuccess && <p className={styles.message}>Registration successful</p>}
       </form>
     </div>
   );
