@@ -27,7 +27,7 @@ function Profile() {
           'Login into account'
         )}
       </h1>
-      <button onClick={handleLogout}>Logout</button>
+      <button onClick={handleLogout}>{tokenData ? 'Logout' : 'Login'}</button>
     </div>
   );
 }

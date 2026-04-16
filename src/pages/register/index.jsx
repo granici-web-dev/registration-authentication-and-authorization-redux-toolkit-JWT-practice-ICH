@@ -27,7 +27,7 @@ function Register() {
     return () => {
       dispatch(resetState());
     };
-  }, [isSuccess, navigate]);
+  }, [isSuccess, navigate, dispatch]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

@@ -13,13 +13,15 @@ function Login() {
 
   const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    if(isSuccess) {
-      navigate('/profile');
-    }
+useEffect(() => {
+  if (isSuccess) {
+    navigate('/profile');
+  }
 
-    return dispatch(resetState())
-  }, [isSuccess, navigate, dispatch])
+  return () => {
+    dispatch(resetState());
+  };
+}, [isSuccess, navigate, dispatch]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;

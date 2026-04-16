@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-const API_URL = 'http://127.0.0.1:5000/api/auth';
+const API_URL = 'http://127.0.0.1:5001/api/auth';
 
 export const register = createAsyncThunk('auth/register', async (userData, { rejectWithValue }) => {
   try {
