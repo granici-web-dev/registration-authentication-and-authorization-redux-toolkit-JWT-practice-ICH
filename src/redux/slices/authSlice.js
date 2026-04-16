@@ -45,7 +45,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       localStorage.removeItem('token');
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -62,24 +62,43 @@ const authSlice = createSlice({
         state.message = action.payload.message;
       });
 
-      builder
-        .addCase(login.pending, (state) => {
-          state.isLoading = true;
-        })
-        .addCase(login.fulfilled, (state, action) => {
-          state.isLoading = false;
-          state.isSuccess = true;
-          state.token = action.payload.token;
-          state.user = jwtDecode(action.payload.token).user;
-          localStorage.setItem('token', action.payload.token);
-        })
-        .addCase(login.rejected, (state, action) => {
-          state.isLoading = false;
-          state.isError = true;
-          state.message = action.payload.message;
-        });
+    builder
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.token = action.payload.token;
+        state.user = jwtDecode(action.payload.token).user;
+        localStorage.setItem('token', action.payload.token);
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload.message;
+      });
   },
 });
+
+const isTokenExpired = (token) => {
+  if (!token) return true;
+
+  const decoded = jwtDecode(token);
+  const currentTime = Date.now() / 1000;
+  return decoded.exp < currentTime;
+};
+
+export const checkTokenExpirationMiddleware = (store) => (next) => (action) => {
+  const result = next(action);
+  const token = store.getState().auth.token;
+
+  if (token && isTokenExpired(token)) {
+    store.dispatch(logout());
+  }
+
+  return result;
+};
 
 export const { resetState, logout } = authSlice.actions;
 export default authSlice.reducer;

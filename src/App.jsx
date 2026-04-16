@@ -4,7 +4,8 @@ import Login from './pages/login';
 import Register from './pages/register';
 import Profile from './pages/profile';
 import Home from './pages/home';
-import Nav from './components/nav'
+import Nav from './components/nav';
+import ProtectedRoute from './components/protectedRoute';
 
 function App() {
   return (
@@ -12,10 +13,17 @@ function App() {
       <Nav />
       <div className="container">
         <Routes>
-          <Route path='/' element={<Home/>} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </Router>
